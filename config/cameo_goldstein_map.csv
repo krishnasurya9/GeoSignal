@@ -1,0 +1,21 @@
+cameo_code,goldstein_score,description
+01,3.0,Make Public Statement
+02,4.0,Appeal
+03,5.0,Express Intent to Cooperate
+04,2.0,Consult
+05,7.0,Engage in Diplomatic Cooperation
+06,6.0,Engage in Material Cooperation
+07,5.0,Provide Aid
+08,-2.0,Yield
+09,-5.0,Investigate
+10,-3.0,Demand
+11,-4.0,Disapprove
+12,-5.0,Reject
+13,-7.0,Threaten
+14,-8.0,Protest
+15,-9.0,Exhibit Force Posture
+16,-5.0,Reduce Relations
+17,-6.0,Coerce
+18,-7.0,Assault
+19,-8.0,Fight
+20,-10.0,Unconventional Mass Violence

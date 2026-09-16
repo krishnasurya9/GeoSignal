@@ -1,0 +1,57 @@
+# Entity Rules for GeoSignal spaCy EntityRuler
+# Format: one JSON object per line: {"label": "...", "pattern": "..."}
+# Add your domain-specific terms here. These are matched before the statistical NER model.
+
+# ── Semiconductors ────────────────────────────────────────────────────────────
+{"label": "SEMICONDUCTOR", "pattern": "EUV lithography"}
+{"label": "SEMICONDUCTOR", "pattern": "NAND flash"}
+{"label": "SEMICONDUCTOR", "pattern": "advanced silicon"}
+{"label": "SEMICONDUCTOR", "pattern": "fabrication plant"}
+{"label": "SEMICONDUCTOR", "pattern": "semiconductor fab"}
+{"label": "SEMICONDUCTOR", "pattern": "microcontroller"}
+{"label": "SEMICONDUCTOR", "pattern": "power electronics"}
+{"label": "SEMICONDUCTOR", "pattern": "trailing-edge logic"}
+{"label": "SEMICONDUCTOR", "pattern": "EDA software"}
+{"label": "SEMICONDUCTOR", "pattern": "photovoltaic cells"}
+{"label": "SEMICONDUCTOR", "pattern": "GPU cluster"}
+
+# ── Energy ────────────────────────────────────────────────────────────────────
+{"label": "ENERGY", "pattern": "Brent crude"}
+{"label": "ENERGY", "pattern": "WTI crude"}
+{"label": "ENERGY", "pattern": "Petroline"}
+{"label": "ENERGY", "pattern": "East-West pipeline"}
+{"label": "ENERGY", "pattern": "Strait of Hormuz"}
+{"label": "ENERGY", "pattern": "natural gas liquefaction"}
+{"label": "ENERGY", "pattern": "LNG terminal"}
+
+# ── Logistics / Shipping ──────────────────────────────────────────────────────
+{"label": "LOGISTICS", "pattern": "Suez Canal"}
+{"label": "LOGISTICS", "pattern": "Bab el-Mandeb"}
+{"label": "LOGISTICS", "pattern": "Cape of Good Hope"}
+{"label": "LOGISTICS", "pattern": "freight surcharge"}
+{"label": "LOGISTICS", "pattern": "container throughput"}
+{"label": "LOGISTICS", "pattern": "Baltic Dry Index"}
+{"label": "LOGISTICS", "pattern": "Yanbu port"}
+{"label": "LOGISTICS", "pattern": "maritime insurance premium"}
+{"label": "LOGISTICS", "pattern": "transshipment hub"}
+
+# ── Agriculture ───────────────────────────────────────────────────────────────
+{"label": "AGRICULTURE", "pattern": "rice shipment"}
+{"label": "AGRICULTURE", "pattern": "food inflation"}
+{"label": "AGRICULTURE", "pattern": "wheat export"}
+{"label": "AGRICULTURE", "pattern": "fertiliser shortage"}
+
+# ── Critical Minerals ─────────────────────────────────────────────────────────
+{"label": "CRITICAL_MINERAL", "pattern": "lithium"}
+{"label": "CRITICAL_MINERAL", "pattern": "cobalt"}
+{"label": "CRITICAL_MINERAL", "pattern": "rare earth"}
+{"label": "CRITICAL_MINERAL", "pattern": "gallium"}
+{"label": "CRITICAL_MINERAL", "pattern": "germanium"}
+{"label": "CRITICAL_MINERAL", "pattern": "tungsten"}
+{"label": "CRITICAL_MINERAL", "pattern": "magnesium"}
+
+# ── Water / Sustainability (India-specific fab constraints) ───────────────────
+{"label": "SUSTAINABILITY", "pattern": "Zero Liquid Discharge"}
+{"label": "SUSTAINABILITY", "pattern": "ZLD"}
+{"label": "SUSTAINABILITY", "pattern": "Ultra-Pure Water"}
+{"label": "SUSTAINABILITY", "pattern": "UPW"}

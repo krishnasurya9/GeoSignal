@@ -1,0 +1,13 @@
+gics_sector_id,gics_sector_name,gics_industry_group,gics_industry,keywords
+10,Energy,Energy,Oil Gas & Consumable Fuels,"oil,crude,petroleum,gas,lng,brent,wti,opec,refinery"
+15,Materials,Materials,Metals & Mining,"lithium,cobalt,rare earth,copper,aluminum,steel,mining,mineral"
+20,Industrials,Capital Goods,Aerospace & Defense,"defense,military,aerospace,weapons"
+20,Industrials,Transportation,Air Freight & Logistics,"shipping,freight,logistics,container,suez,port,cargo"
+25,Consumer Discretionary,Consumer Durables & Apparel,Automobiles,"automotive,vehicle,automobile,car,ev,oem"
+30,Consumer Staples,Food & Staples Retailing,Food Products,"rice,wheat,food,agriculture,grain,fertiliser"
+35,Health Care,Pharmaceuticals,Pharmaceuticals,"pharma,pharmaceutical,drug,medicine,vaccine"
+40,Financials,Banks,Banks,"bank,financial,credit,insurance,lending"
+45,Information Technology,Semiconductors,Semiconductors,"semiconductor,chip,euv,nand,microcontroller,fab,eda,silicon"
+50,Communication Services,Media & Entertainment,Interactive Media,"media,social media,telecom,5g"
+55,Utilities,Utilities,Electric Utilities,"electricity,power,utility,solar,wind,renewable"
+60,Real Estate,Real Estate,Real Estate Investment Trusts,"real estate,reit,property,construction"

@@ -1,20 +1,46 @@
+# Environment
 .env
+.venv/
+venv/
+
+# Data — raw and large intermediates not committed
 data/raw/*
 data/raw/**/*
 !data/raw/.gitkeep
+
+data/interim/*
+data/interim/**/*
+!data/interim/.gitkeep
+
 data/processed/*
 data/processed/**/*
 !data/processed/.gitkeep
-results/*
-results/**/*
+
+# Results — generated outputs not committed
+results/figures/*
+results/tables/*
+results/datasets/*
+results/logs/*
 !results/.gitkeep
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
-.DS_Store
 *.egg-info/
 dist/
 build/
-.venv/
-venv/
-scripts/test_query.py
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Temporary / scratch files
+run_verify.py
+_check_imports.py
+verify_output.txt

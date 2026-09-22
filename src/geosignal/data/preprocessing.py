@@ -1,15 +1,11 @@
 """
-src/preprocessing.py
-Phase I → II: Data Harmonization + Goldstein Mapping + News Cleaning
+geosignal.data.preprocessing
+Phase I→II — GDELT harmonization, Goldstein mapping, text cleaning.
 
-Steps:
-  1. Standardize GDELT columns → canonical schema
-  2. Apply ISO 8601 dates, drop nulls, deduplicate
-  3. Map CAMEO EventRootCode → Goldstein Scale (continuous intensity)
-  4. Clean raw news text (lowercase, strip HTML, dedup by Jaccard)
-
-Usage:
-    python src/preprocessing.py
+Canonical output schema (processed_events.parquet):
+    event_id, date, event_code, event_root, goldstein,
+    actor1, actor2, action_country, action_lat, action_lon,
+    avg_tone, num_articles, source_url
 """
 
 import re
@@ -19,46 +15,31 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config.settings import DATA_RAW, DATA_PROC, GOLDSTEIN_MAP_PATH
 
-# ── Canonical output schema ────────────────────────────────────────────────────
 CANONICAL_COLS = [
-    "event_id",       # unique event identifier
-    "date",           # ISO 8601 date
-    "event_code",     # CAMEO 4-digit EventCode
-    "event_root",     # CAMEO 2-digit root
-    "goldstein",      # Goldstein intensity score (float, -10 to +10)
-    "actor1",         # primary actor country/group
-    "actor2",         # target actor country/group
-    "action_country", # country where action occurred
-    "action_lat",     # latitude
-    "action_lon",     # longitude
-    "avg_tone",       # average media tone
-    "num_articles",   # media coverage count
-    "source_url",     # originating article URL
+    "event_id", "date", "event_code", "event_root", "goldstein",
+    "actor1", "actor2", "action_country", "action_lat", "action_lon",
+    "avg_tone", "num_articles", "source_url",
 ]
-
 
 # ── Goldstein mapping ─────────────────────────────────────────────────────────
 
 def load_goldstein_map() -> dict:
     """
-    Load CAMEO EventCode → Goldstein score mapping.
-    Falls back to a minimal built-in dictionary if the CSV does not yet exist.
+    Load CAMEO EventCode → Goldstein score from CSV.
+    Falls back to root-code approximation (L-005) if file missing.
     """
     if GOLDSTEIN_MAP_PATH.exists():
         df = pd.read_csv(GOLDSTEIN_MAP_PATH, dtype={"cameo_code": str})
         return dict(zip(df["cameo_code"], df["goldstein_score"].astype(float)))
 
-    # Minimal fallback: root-code → score (from published literature)
-    logger.warning("Goldstein map CSV not found – using built-in root-code fallback.")
+    logger.warning("Goldstein map CSV not found — using built-in root-code fallback (L-005).")
     return {
-        "01": 3.0,  "02": 4.0,  "03": 5.0,  "04": 2.0,  "05": 7.0,
-        "06": 6.0,  "07": 5.0,  "08": -2.0, "09": -5.0, "10": -3.0,
+        "01":  3.0, "02":  4.0, "03":  5.0, "04":  2.0, "05":  7.0,
+        "06":  6.0, "07":  5.0, "08": -2.0, "09": -5.0, "10": -3.0,
         "11": -4.0, "12": -5.0, "13": -7.0, "14": -8.0, "15": -9.0,
-        "16": -5.0, "17": -6.0, "18": -7.0, "19": -8.0, "20": -10.0,
+        "16": -5.0, "17": -6.0, "18": -7.0, "19": -8.0, "20":-10.0,
     }
 
 
@@ -66,17 +47,20 @@ def load_goldstein_map() -> dict:
 
 def harmonize_gdelt(raw_path: Path) -> pd.DataFrame:
     """
-    Standardize raw GDELT parquet into the canonical schema.
+    Map raw GDELT parquet to the canonical 13-column event schema.
+
+    - Uses GDELT-supplied GoldsteinScale; falls back to root-code map.
+    - Drops rows with null date or event_code.
+    - Deduplicates on GlobalEventID.
 
     Args:
-        raw_path: Path to raw GDELT parquet file.
+        raw_path: Path to gdelt_raw.parquet
 
     Returns:
-        Cleaned, deduplicated DataFrame in canonical schema.
+        Clean DataFrame in CANONICAL_COLS schema.
     """
     logger.info(f"Harmonizing GDELT from {raw_path}")
     df = pd.read_parquet(raw_path)
-
     goldstein_map = load_goldstein_map()
 
     out = pd.DataFrame()
@@ -108,80 +92,57 @@ def harmonize_gdelt(raw_path: Path) -> pd.DataFrame:
 
 # ── Text cleaning ─────────────────────────────────────────────────────────────
 
-_HTML_RE   = re.compile(r"<[^>]+>")
-_CLEAN_RE  = re.compile(r"[^a-z0-9\s]")
-_SPACE_RE  = re.compile(r"\s+")
+_HTML_RE  = re.compile(r"<[^>]+>")
+_CLEAN_RE = re.compile(r"[^a-z0-9\s]")
+_SPACE_RE = re.compile(r"\s+")
 
 
 def clean_text(text: str) -> str:
     """
-    Normalize a raw news article string:
-      - Lowercase
-      - Strip HTML tags
-      - Remove non-alphanumeric characters
-      - Collapse whitespace
+    Lowercase, strip HTML, remove non-alphanumeric, collapse whitespace.
+    Must NOT be applied before spaCy NER — use raw_text for NER (DEC-005).
     """
-    text = text.lower()
+    text = str(text).lower()
     text = _HTML_RE.sub(" ", text)
     text = _CLEAN_RE.sub(" ", text)
-    text = _SPACE_RE.sub(" ", text).strip()
-    return text
+    return _SPACE_RE.sub(" ", text).strip()
 
 
 def jaccard_similarity(a: str, b: str) -> float:
-    """Compute token-level Jaccard similarity between two strings."""
-    set_a = set(a.split())
-    set_b = set(b.split())
-    if not set_a or not set_b:
+    sa, sb = set(a.split()), set(b.split())
+    if not sa or not sb:
         return 0.0
-    return len(set_a & set_b) / len(set_a | set_b)
+    return len(sa & sb) / len(sa | sb)
 
 
 def deduplicate_news(news_df: pd.DataFrame,
                      text_col: str = "text",
                      threshold: float = 0.85) -> pd.DataFrame:
-    """
-    Remove near-duplicate news articles using Jaccard similarity.
-
-    Args:
-        news_df:   DataFrame with at least a `text_col` column.
-        text_col:  Column name containing cleaned article text.
-        threshold: Jaccard threshold above which articles are considered duplicate.
-
-    Returns:
-        Deduplicated DataFrame.
-    """
-    texts  = news_df[text_col].tolist()
-    keep   = [True] * len(texts)
-
+    """Remove near-duplicate articles by token-level Jaccard similarity."""
+    texts = news_df[text_col].tolist()
+    keep  = [True] * len(texts)
     for i in range(len(texts)):
         if not keep[i]:
             continue
         for j in range(i + 1, len(texts)):
             if keep[j] and jaccard_similarity(texts[i], texts[j]) >= threshold:
                 keep[j] = False
-
     result = news_df[keep].reset_index(drop=True)
-    removed = len(news_df) - len(result)
-    logger.info(f"News dedup: removed {removed} near-duplicates ({threshold:.0%} Jaccard threshold)")
+    logger.info(f"News dedup: removed {len(news_df) - len(result)} near-duplicates.")
     return result
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    raw_gdelt = DATA_RAW / "gdelt_raw.parquet"
-    if not raw_gdelt.exists():
-        logger.error(f"Raw GDELT file not found: {raw_gdelt}. Run data_loader.py first.")
+    raw = DATA_RAW / "gdelt_raw.parquet"
+    if not raw.exists():
+        logger.error(f"Missing {raw} — run loader.py first.")
         return
-
-    processed = harmonize_gdelt(raw_gdelt)
-    out_path  = DATA_PROC / "processed_events.parquet"
-    processed.to_parquet(out_path, index=False)
-    logger.success(f"Processed events saved → {out_path} ({len(processed):,} rows)")
-
-    # Preview
-    print(processed.head(5).to_string())
+    processed = harmonize_gdelt(raw)
+    out = DATA_PROC / "processed_events.parquet"
+    processed.to_parquet(out, index=False)
+    logger.success(f"Saved {len(processed):,} events → {out}")
 
 
 if __name__ == "__main__":

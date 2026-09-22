@@ -1,0 +1,24 @@
+{
+  "schema_version": "2",
+  "experiments": [
+    {
+      "experiment_id": "EXP-001",
+      "description": "Baseline GDELT 2024 Q1 (90-day dev sample) → NSE sectoral impact",
+      "created": "2026-09-16",
+      "status": "pipeline_incomplete",
+      "config": {
+        "start_date": "2024-01-01",
+        "end_date":   "2024-03-31",
+        "granger_max_lags": 12,
+        "estimation_window": 120,
+        "event_window": [-5, 30],
+        "min_cosine_sim": 0.05,
+        "bm25_top_n": 10
+      },
+      "stages_completed": ["download_gdelt", "download_gkg", "preprocess", "market_data"],
+      "stages_pending":   ["nlp_alignment", "sector_mapping", "temporal_analysis", "impact_analysis"],
+      "outputs": {},
+      "notes": "Dev sample. Granger tests underpowered at 90 days (L-009). Expand to 2022-2024 for production."
+    }
+  ]
+}

@@ -433,19 +433,26 @@ Table~\ref{tab:crosscase} reports the descriptive event-study output for all six
 \toprule
 \textbf{ID} & \textbf{Label} & \textbf{Str.} & \textbf{Anchor} & \textbf{Ticker} & \textbf{CAR (\%)} & \textbf{$p$} & \textbf{Verdict} \\
 \midrule
-CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{\^{}CNXINFRA}  & n/a & n/a & n/a \\
-CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & $+3.58$ & $0.18$ & Null \\
-CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{\^{}CNXENERGY} & n/a & n/a & n/a \\
-CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{\^{}CNXMETAL}  & n/a & n/a & n/a \\
-CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{\^{}CNXENERGY} & n/a & n/a & n/a \\
-CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & $-1.17$ & $0.55$ & Null \\
+CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{ADANIPORTS.NS}  & $+4.219$ & $0.4455$ & Null \\
+CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & $-7.003$ & $0.1974$ & Null \\
+CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{RELIANCE.NS}   & $+4.496$ & $0.0614$ & Null \\
+CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{TATASTEEL.NS}  & $+0.104$ & $0.9681$ & Null \\
+CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{RELIANCE.NS}   & $+4.496$ & $0.0614$ & Null \\
+CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & $-7.046$ & $0.1344$ & Null \\
 \bottomrule
 \end{tabular}
 
 \smallskip
-\footnotesize Run \texttt{python experiments/case\_studies/run\_all\_cases.py} to populate this table.
-The generated \texttt{results/datasets/cross\_case\_summary.csv} and
-\texttt{cross\_case\_summary.tex} contain the filled values.
+\footnotesize CAR and $p$ computed by \texttt{experiments/case\_studies/run\_pipeline.py} (MacKinlay 1997,
+120-session estimation window).
+CS-01 uses \texttt{ADANIPORTS.NS} (ports proxy);
+CS-03 and CS-05 use \texttt{RELIANCE.NS} (energy proxy);
+CS-04 uses \texttt{TATASTEEL.NS} (metals proxy).
+Sector index tickers were unavailable in the archived data
+(\texttt{\^{}CNXINFRA}, \texttt{\^{}CNXENERGY}, \texttt{\^{}CNXMETAL}).
+CS-02 and CS-06 use \texttt{\^{}CNXIT} and \texttt{\^{}CNXPHARMA} respectively,
+which are present throughout the sample.
+Full results in \texttt{results/datasets/cross\_case\_summary.csv}.
 \end{table*}
 
 \subsection{Geographic propagation maps}\label{sec:propmap}
@@ -589,7 +596,7 @@ The configured mapper uses keyword rules in the GICS taxonomy. Examples are oil/
 \begin{itemize}
   \item \textbf{[DONE]} Public repository created: \url{https://github.com/krish20041610/GeoSignal}.
   \item \textbf{[DONE]} Conflicts of interest confirmed: none.
-  \item Run \texttt{python experiments/case\_studies/run\_all\_cases.py} and paste the values from \texttt{cross\_case\_summary.csv} into Table~\ref{tab:crosscase}; then uncomment the \texttt{\textbackslash{}includegraphics} lines for Figures~\ref{fig:propmap_cs01} and the remaining five case maps.
+  \item \textbf{[DONE]} Run \texttt{python experiments/case\_studies/run\_pipeline.py}: cross-case table populated and all six propagation-map figures generated. CS-02 (\texttt{\^{}CNXIT}) and CS-06 (\texttt{\^{}CNXPHARMA}) have numeric CARs; CS-01, CS-03--CS-05 now also have numeric CARs using proxy tickers (ADANIPORTS.NS, RELIANCE.NS, TATASTEEL.NS) since NSE sector-index history was unavailable (see table footnote).
   \item Conduct the two-rater relevance labelling (Section~\ref{sec:future}, item~1) and report Cohen's kappa; update the Limitations section with the agreement score.
   \item Verify remaining bibliography entries and choose the final citation style.
   \item Add baseline/enriched query strings if the target venue requires implementation-level reproducibility.

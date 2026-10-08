@@ -1,16 +1,16 @@
 # GeoSignal
 
-**Geopolitical Event → Economic Impact Analysis Pipeline**
+**Offline feasibility prototype for a proposed live geopolitical-monitoring architecture**
 
-A reproducible research pipeline that links structured geopolitical event data to measurable downstream economic impacts on Indian sectoral markets, using NLP, event studies, Granger causality, and Leontief Input-Output propagation.
+A research prototype for linking geopolitical events and reporting to potentially exposed sectors or securities and market context. The paper's intended system is live monitoring; the current empirical evaluation replays archived historical data. This repository does not demonstrate a live system or reliable stock-impact prediction.
 
 ---
 
 ## 1. Overview
 
-GeoSignal operationalises the research question:
+GeoSignal explores the feasibility question:
 
-> *Do geopolitical events (trade restrictions, shipping disruptions, diplomatic tensions, armed conflict) produce statistically detectable economic impacts in Indian sectoral markets?*
+> *Can an architecture connect geopolitical event records and reporting to candidate economic exposures and market context in a future live-monitoring system?*
 
 The pipeline works by:
 1. Acquiring structured geopolitical events from GDELT 1.0
@@ -42,9 +42,9 @@ Temporal/causal analysis (predictive precedence only — not causation)
 Cross-sector propagation (illustrative — toy matrix pending real I-O data)
 ```
 
-**Implemented:** All stages from data acquisition through integrated dataset assembly.  
-**Partially implemented:** Leontief propagation (toy matrix — real India MoSPI / WIOD I-O data not yet integrated).  
-**Planned:** Expanded 2022-2024 dataset (current dev sample is 90 days, Q1 2024 only).
+**Evidence available:** Historical event ingestion, same-source URL linkage, metadata-only candidate ranking, actor graph generation, and descriptive market-model calculations for two event cases.  
+**Weak or not validated:** Semantic retrieval, event-to-sector/security mapping, stock-impact prediction, live-system operation, Granger results, and empirical Leontief propagation.  
+**Scope:** Archived 2024 Q1 event/news records; event-specific price windows extend through 2024-04-30.
 
 ---
 
@@ -138,16 +138,17 @@ GeoSignal/
 
 | File | Description | Size (approx) |
 |------|-------------|---------------|
-| `data/raw/gdelt_raw.parquet` | Raw GDELT 1.0 events (91 days, 2024 Q1) | ~913 MB |
-| `data/raw/nse_sector_prices.parquet` | NSE sectoral index prices (2022-2024) | ~16 KB |
-| `data/raw/gkg/*.zip` | GDELT GKG v1 daily ZIPs | ~2 GB |
-| `data/processed/processed_events.parquet` | Harmonized canonical events | ~2.6 MB |
-| `data/processed/news_corpus.parquet` | GKG metadata proxy corpus (53k articles) | ~68 MB |
-| `data/processed/nse_returns.parquet` | Daily sectoral returns | ~18 KB |
-| `data/interim/event_news_pairs.parquet` | BM25/TF-IDF aligned event–article pairs | generated |
-| `data/interim/event_news_sector.parquet` | Sector-enriched pairs | generated |
-| `data/processed/temporal_results.parquet` | Event study + raw impact results | generated |
-| `results/datasets/integrated_validation_dataset.parquet` | Final research output | generated |
+| `data/raw/gdelt/` and `data/raw/gkg/` | 91 dated ZIP archives for each source, 2024 Q1 | cached |
+| `data/raw/gdelt_raw.parquet` | Legacy concatenated event cache; date coverage needs reconciliation | ~913 MB |
+| `data/processed/archive_stale_20261005/` | Preserved earlier processed files with incorrect coverage | archived |
+| `results/datasets/redsea_events_20240112.parquet` | Selected historical event records for the case | generated |
+| `results/datasets/redsea_news_corpus_20240112.parquet` | Same-day GKG metadata corpus, not full article text | generated |
+| `results/datasets/redsea_event_news_sector_pairs_20240112.parquet` | 230 aligned event–news metadata pairs with rule-based sector labels | generated |
+| `results/datasets/redsea_nifty50_returns_20230601_20240430.parquet` | Broad-market returns for descriptive case context | generated |
+| `results/datasets/redsea_run_summary_20240112.json` | Stage outcomes, limitations, and output manifest | generated |
+| `results/datasets/chip_controls_replay_summary_20240312.json` | Second-case event/news linkage and retrieval ranks | generated |
+| `results/datasets/chip_controls_top20_relevance_audit_20240312.csv` | Single-rater diagnostic review of baseline top-20 metadata candidates | generated |
+| `results/datasets/chip_controls_market_model_event_study_20240312.csv` | Descriptive semiconductor and comparison basket event windows | generated |
 
 Raw data is not committed (see `.gitignore`). Large files are download-cached automatically.
 
@@ -179,34 +180,21 @@ python scripts/verify_data.py
 python scripts/smoke_test.py
 ```
 
-### Run the full pipeline (dev sample: 2024 Q1)
+### Reproduce the current historical case
 ```bash
-python scripts/run_pipeline.py --start 2024-01-01 --end 2024-03-31
+python scripts/run_redsea_case.py
 ```
 
-### Run the full research window (2022-2024)
 ```bash
-python scripts/run_pipeline.py --start 2022-01-01 --end 2024-12-31
+# Second bounded historical replay and its relevance/market diagnostics
+python scripts/run_chip_controls_case.py
+python scripts/create_chip_relevance_audit.py
+python scripts/analyze_chip_controls_market_response.py
 ```
 
-### Skip expensive stages you've already run
-```bash
-python scripts/run_pipeline.py --skip-download   # reuse cached raw data
-python scripts/run_pipeline.py --skip-nlp        # reuse existing event_news_pairs.parquet
-```
-
-### Force rerun of all stages
-```bash
-python scripts/run_pipeline.py --force
-```
-
-### Run a single stage
-```bash
-python scripts/run_stage.py --stage preprocess
-python scripts/run_stage.py --stage nlp
-python scripts/run_stage.py --stage temporal
-python scripts/run_stage.py --stage impact
-```
+The broader Q1/full-window runners are not validated for empirical results yet.
+Do not rely on the archived processed outputs or interpret synthetic I-O fallback
+results as measured impacts.
 
 ---
 
@@ -312,19 +300,27 @@ Full details: `docs/LIMITATIONS.md`
 
 ## 14. Current Status
 
-| Component | Status |
-|-----------|--------|
-| GDELT 1.0 acquisition | ✅ Implemented |
-| GKG v1 news corpus | ✅ Implemented |
-| Event harmonization + Goldstein | ✅ Implemented |
-| BM25 + TF-IDF alignment (corpus-level vectorizer) | ✅ Implemented |
-| spaCy NER + EntityRuler | ✅ Implemented |
-| GICS sector mapping | ✅ Implemented |
-| NSE market data | ✅ Implemented |
-| MacKinlay (1997) event study | ✅ Implemented |
-| Toda-Yamamoto Granger causality | ✅ Implemented |
-| Integrated validation dataset | ✅ Implemented |
-| Leontief I-O propagation | ⚠️ Illustrative only (toy matrix) |
-| Real India I-O data (MoSPI / WIOD) | 🔲 Planned |
-| Full 2022-2024 dataset | 🔲 Planned |
-| NetworkX graph layer | 🔲 Planned |
+This table reports execution status, not whether a code module exists. The current
+reproducible run is an offline replay of a proposed live-use architecture on one
+historical case. It is not a live deployment or a full-quarter sector-impact
+evaluation. See `docs/RESEARCH_STATUS.md` and the case manifest at
+`results/datasets/redsea_run_summary_20240112.json`.
+
+| Component | Current evidence |
+|-----------|------------------|
+| Historical GDELT/GKG archives | 91 daily ZIPs for 2024 Q1 are cached locally for each source |
+| Event/news processing | 31 exact source-link rows cover 30/30 selected events; BM25/TF-IDF returned 230 candidates for 25/30 |
+| Retrieval check | Exact source URL occurs in lexical candidates for 1/30 events (3.33% top-10 event recall); this is a weak retrieval result, not candidate relevance accuracy |
+| Hybrid event/news output | Direct source links plus lexical candidates cover 30/30 events and produce 260 unique event/article pairs |
+| Text meaning | GKG metadata only; full article bodies are not used. Exact URL linkage confirms source identity, not semantic correctness |
+| Sector mapping | Partial, low confidence: 4/230 rule matches; 226 remain Unknown |
+| Market response | Descriptive matched-basket market-model outputs for two cases; baskets are researcher-defined, not system predictions, and estimates are not causal |
+| Actor graph | Generated for the case: 9 actor nodes and 10 edges |
+| Sector/security mapping | Not validated; candidate baskets for market calculations are specified by the researcher |
+| Sector event study | Descriptive calculations exist for candidate baskets; no significance or causal claim is justified |
+| Granger / prediction / ablations | Not run; no validated labelled panel or adequate case time series |
+| Leontief propagation | Not run; the current fallback can be synthetic and the case has no validated shocks |
+| Full Q1 end-to-end evaluation | Pending; the cached processed tables were stale and should not be treated as Q1 results |
+
+The master runner no longer invents a -10% shock when empirical CARs are absent;
+synthetic I-O matrices are skipped for empirical propagation.

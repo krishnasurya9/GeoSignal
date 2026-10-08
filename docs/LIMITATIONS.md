@@ -123,15 +123,105 @@ Single-word keyword mapping is a fallback.
 
 ---
 
-## L-009: Dev Sample is Only 90 Days (2024 Q1)
+## L-009: GDELT Event Archive is Q1 2024 Only (90 days)
 
-**Scope:** Full pipeline
+**Scope:** Full pipeline, Granger causality, case study event counts
 
-The initial dev sample covers 90 days. Granger causality tests require sustained
-time series (ideally 2+ years for daily data at lag=12). Event study estimation
-windows of 120 trading days may exceed the dev sample.
+The structured GDELT event archive used in this study covers 90 days
+(01 Jan – 31 Mar 2024). This affects two things differently:
 
-**Mitigation:** NSE index data is downloaded for 2022-2024 (full estimation window).
-GDELT events are filtered to the dev period. Granger analysis will only be run
-if sufficient observations are confirmed.
-**Resolution path:** Expand to 2022-2024 for full analysis in October.
+**Event study (not materially affected):**
+The MacKinlay (1997) market model estimation window uses NSE daily returns,
+which are downloaded for 2022–2024 via yfinance (independent of the GDELT
+archive). All six case studies have 120+ trading days of return history
+available before their anchor dates. Event study results are valid within
+the cases selected.
+
+**Granger / Toda-Yamamoto (materially affected — not run as a main result):**
+Granger causality tests on a daily geo-risk signal require a sustained
+time series (typically 2+ years at lag=12 for meaningful power). The
+90-day GDELT window is insufficient. The Granger stage in run_all.py
+logs an explicit warning and produces no result when observations fall
+below 4 × max_lag. A longer 2022–2024 daily panel would support a
+pre-specified Toda-Yamamoto analysis and is left for future work.
+
+**Case coverage (adequate for the paper's claim):**
+Six cases are registered across all four strata (A/B/C/D), drawing on
+the 2024 Q1 archive. The paper's claim is workflow feasibility, not
+population-level inference. Six varied cases with honest null reporting
+are sufficient for that claim. The Q1 archive is not expanded to avoid
+adding unvalidated material under time pressure.
+
+**Mitigation (current):**
+- Event study estimation windows are satisfied by the yfinance return history.
+- All six cases are anchored within the 90-day GDELT window.
+- Granger results are suppressed and documented as insufficient (not omitted silently).
+- The cross-case summary table (cross_case_summary.csv / .tex) reports
+  all results including null and insufficient outcomes.
+
+**Resolution path (future work):**
+Expand the GDELT + GKG archive to 2022–2024 using batch_downloader.py
+(`python run_all.py --full --start 2022-01-01 --end 2024-12-31`).
+This will enable the Toda-Yamamoto Granger analysis with sufficient power
+and extend the case study pool. Leave one sentence in the paper:
+"A longer 2022–2024 daily panel would support a pre-specified temporal
+analysis (Toda-Yamamoto) and is left for future work."
+
+---
+
+## L-010: Six Cases Are Not a Random Sample
+
+**Scope:** External validity of case study findings
+
+The six registered cases were selected by a deterministic protocol
+(case_registry.py §2) after writing inclusion criteria — not after
+looking at returns. However, they are not a random sample of geopolitical
+events: they were chosen because they have auditable real-world anchors,
+clear India exposure channels, and sufficient GDELT volume. Events that
+left no trace in the 2024 Q1 archive are necessarily excluded.
+
+**Consequence:** Results (confirmed or null) apply to these six cases.
+They do not generalise to the population of geopolitical events, to other
+markets, or to other time periods.
+
+**Mitigation:** The paper should state: "Results are reported for six
+pre-selected cases satisfying the inclusion protocol. They do not
+constitute a representative sample and should not be interpreted as
+population-level estimates."
+
+---
+
+## L-011: Propagation Map Layer 2 Uses Deterministic Country Centroids
+
+**Scope:** src/geosignal/visualization/propagation_map.py
+
+The "directly affected countries" layer plots affected_iso2 codes at
+hand-curated centroids (COUNTRY_CENTROIDS dict in propagation_map.py).
+These are capital-city or geographic-centre coordinates, not
+trade-flow-weighted impact centroids. The circle sizes are scaled by
+mean |Goldstein| of GDELT events near the anchor date, which is a
+media-coverage proxy, not a verified economic exposure measure.
+
+**Mitigation:** The map is a visualisation of the pipeline's reasoning
+chain, not a claim about actual geographic impact. Label all map
+figures accordingly: "Pipeline-detected propagation pathway
+(GDELT-sourced · indicative only)."
+
+---
+
+## L-012: Leontief I-O Results Are Illustrative Unless WIOD CSV Is Supplied
+
+**Scope:** Stage 11 of run_all.py, all case study Leontief figures
+
+Unless the WIOD 2016 India CSV or a MoSPI I-O table is provided via
+--io-matrix or auto-downloaded by io_loader.py, the Leontief
+propagation uses a synthetic matrix estimated from MoSPI 2022-23 GDP
+shares. While the synthetic matrix satisfies the Hawkins-Simon
+stability condition and has realistic structural priors, it is not an
+empirically derived transaction table.
+
+**Mitigation:** All Leontief outputs are labelled with the matrix source
+in the figure title and in leontief_shocks.csv. The paper should note:
+"Leontief propagation results are illustrative; the A matrix is
+estimated from sectoral GDP shares pending integration of the official
+MoSPI 2017-18 I-O table. Same for the case study Leontief figures."

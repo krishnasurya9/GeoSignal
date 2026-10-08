@@ -433,12 +433,12 @@ Table~\ref{tab:crosscase} reports the descriptive event-study output for all six
 \toprule
 \textbf{ID} & \textbf{Label} & \textbf{Str.} & \textbf{Anchor} & \textbf{Ticker} & \textbf{CAR (\%)} & \textbf{$p$} & \textbf{Verdict} \\
 \midrule
-CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{\^{}CNXINFRA}  & \todo{run} & \todo{run} & \todo{run} \\
-CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & \todo{run} & \todo{run} & \todo{run} \\
-CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{\^{}CNXENERGY} & \todo{run} & \todo{run} & \todo{run} \\
-CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{\^{}CNXMETAL}  & \todo{run} & \todo{run} & \todo{run} \\
-CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{\^{}CNXENERGY} & \todo{run} & \todo{run} & \todo{run} \\
-CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & \todo{run} & \todo{run} & \todo{run} \\
+CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{\^{}CNXINFRA}  & n/a & n/a & n/a \\
+CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & $+3.58$ & $0.18$ & Null \\
+CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{\^{}CNXENERGY} & n/a & n/a & n/a \\
+CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{\^{}CNXMETAL}  & n/a & n/a & n/a \\
+CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{\^{}CNXENERGY} & n/a & n/a & n/a \\
+CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & $-1.17$ & $0.55$ & Null \\
 \bottomrule
 \end{tabular}
 
@@ -456,16 +456,44 @@ The maps visualise the pipeline's reasoning chain---which countries the pipeline
 
 \begin{figure}[t]
 \centering
-% Uncomment after running run_all_cases.py:
-% \includegraphics[width=\columnwidth]{../results/figures/cs01/propagation_map_sm.png}
-\framebox{\parbox{\columnwidth}{\centering\vspace{1.2cm}
-\small\textit{Figure placeholder.}\\[4pt]
-Run \texttt{python experiments/case\_studies/run\_all\_cases.py}\\
-then uncomment the \texttt{\textbackslash{}includegraphics} line above.\\[4pt]
-Output: \texttt{results/figures/cs01/propagation\_map\_sm.png}
-\vspace{1.2cm}}}
+\includegraphics[width=\columnwidth]{../results/figures/cs01/propagation_map_sm.png}
 \caption{CS-01 propagation map: Red Sea / Houthi crisis (12 Jan 2024). Red star = event origin (Yemen). Orange circles = directly affected countries (size $\propto$ mean $|$Goldstein$|$). Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
 \label{fig:propmap_cs01}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/cs02/propagation_map_sm.png}
+\caption{CS-02 propagation map: US semiconductor export controls (29 Jan 2024). Red star = event origin (USA). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\label{fig:propmap_cs02}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/cs03/propagation_map_sm.png}
+\caption{CS-03 propagation map: Iran oil sanctions tightening (16 Feb 2024). Red star = event origin (Iran). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\label{fig:propmap_cs03}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/cs04/propagation_map_sm.png}
+\caption{CS-04 propagation map: China rare-earth export curbs (01 Feb 2024). Red star = event origin (China). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\label{fig:propmap_cs04}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/cs05/propagation_map_sm.png}
+\caption{CS-05 propagation map: Russia Black Sea energy disruption (18 Jan 2024). Red star = event origin (Russia). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\label{fig:propmap_cs05}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../results/figures/cs06/propagation_map_sm.png}
+\caption{CS-06 propagation map: India pharma API supply shock (08 Mar 2024). Red star = event origin (China). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\label{fig:propmap_cs06}
 \end{figure}
 
 % ------------------------------------------------------------

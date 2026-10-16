@@ -191,21 +191,21 @@ The second case is a 29~January 2024 BIS Export Administration Regulations updat
 
 Four further cases were selected under the same inclusion protocol (Table~\ref{tab:caseregistry}), each with an auditable real-world anchor, a keyword and CAMEO filter written before examining returns, and a minimum of five GDELT event records after deduplication (or one named policy document with an identifiable URL). Cases within the same stratum are at least 14 calendar days apart.
 
-\begin{table*}[t]
+\begin{table*}[!t]
 \centering
-\caption{Six-case registry. Strata: A = sanctions/export controls, B = conflict/shipping disruption, C = commodity/supply shock. Anchor = GDELT detection date used as event-study reference. All parameters frozen before any results were examined.}
+\caption{Six-case registry. Strata: A = sanctions/export controls, B = conflict/shipping disruption, C = commodity/supply shock. Anchor = GDELT detection date used as event-study reference. All parameters frozen before any results were examined. \textsuperscript{a} Proxy ticker used in the saved replay because the sector-index history was unavailable (\texttt{\^{}CNXINFRA}, \texttt{\^{}CNXENERGY}, \texttt{\^{}CNXMETAL}).}
 \label{tab:caseregistry}
 \small
-\begin{tabular}{llllll}
+\begin{tabular}{@{}p{1.0cm}p{4.2cm}p{0.6cm}p{2.1cm}p{2.3cm}p{5.0cm}@{}}
 \toprule
-\textbf{ID} & \textbf{Label} & \textbf{Str.} & \textbf{Anchor} & \textbf{NSE ticker} & \textbf{India channel (brief)} \\
+\textbf{ID} & \textbf{Label} & \textbf{S.} & \textbf{Anchor} & \textbf{NSE ticker} & \textbf{India channel (brief)} \\
 \midrule
-CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{\^{}CNXINFRA}  & Freight surcharges; FMCG export delays \\
-CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & Downstream chip scarcity; auto/AI demand \\
-CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{\^{}CNXENERGY} & Crude substitution premium; Brent spread \\
-CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{\^{}CNXMETAL}  & EV battery / specialty steel input costs \\
-CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{\^{}CNXENERGY} & Russian crude freight premium (+54\%) \\
-CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & $\approx$70\% bulk API imports from China \\
+CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{ADANIPORTS.NS}\textsuperscript{a}  & Freight surcharges; FMCG export delays \\
+CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}                         & Downstream chip scarcity; auto/AI demand \\
+CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{RELIANCE.NS}\textsuperscript{a}    & Crude substitution premium; Brent spread \\
+CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{TATASTEEL.NS}\textsuperscript{a}   & EV battery / specialty steel input costs \\
+CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{RELIANCE.NS}\textsuperscript{a}    & Russian crude freight premium (+54\%) \\
+CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA}                    & $\approx$70\% bulk API imports from China \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -269,7 +269,7 @@ Benchmarks are the Nifty~50 for the Indian series and the S\&P~500 for the globa
 
 \subsection{Researcher-defined baskets}
 
-Case~1 uses the researcher-selected ports/logistics basket ADANIPORTS.NS, CONCOR.NS, GESHIP.NS, SCI.NS, and AEGISLOG.NS; energy basket RELIANCE.NS, ONGC.NS, IOC.NS, and BPCL.NS; and FMCG comparison basket HINDUNILVR.NS, ITC.NS, NESTLEIND.NS, and BRITANNIA.NS. The FMCG constituent proxy was used because the sector-index history was unavailable. Case~2 uses global semiconductor firms (NVDA, TSM, ASML, INTC), U.S.\ semiconductor ETFs (SOXX, SMH; context only), and Indian large-cap IT (TCS.NS, INFY.NS, HCLTECH.NS, WIPRO.NS; indirect context). All mappings are researcher-defined and remain unvalidated.
+{\sloppy Case~1 uses the researcher-selected ports/logistics basket ADANIPORTS.NS, CONCOR.NS, GESHIP.NS, SCI.NS, and AEGISLOG.NS; energy basket RELIANCE.NS, ONGC.NS, IOC.NS, and BPCL.NS; and FMCG comparison basket HINDUNILVR.NS, ITC.NS, NESTLEIND.NS, and BRITANNIA.NS. The FMCG constituent proxy was used because the sector-index history was unavailable. Case~2 uses global semiconductor firms (NVDA, TSM, ASML, INTC), U.S.\ semiconductor ETFs (SOXX, SMH; context only), and Indian large-cap IT (TCS.NS, INFY.NS, HCLTECH.NS, WIPRO.NS; indirect context). All mappings are researcher-defined and remain unvalidated.}
 
 % ------------------------------------------------------------
 \section{Results}\label{sec:results}
@@ -282,52 +282,66 @@ Case~1 uses the researcher-selected ports/logistics basket ADANIPORTS.NS, CONCOR
 
 \begin{table}[t]
 \centering
-\caption{Case 1 linkage and coverage diagnostics.}
+\caption{Case~1 linkage and coverage diagnostics.
+  \emph{E} = Energy, \emph{I} = Industrials, \emph{CS} = Consumer Staples.}
 \label{tab:redsea-link}
 \small
-\begin{tabular}{p{5.7cm}r}
+\begin{tabular}{@{}p{4.8cm}r@{}}
 \toprule
 \textbf{Quantity} & \textbf{Value} \\
 \midrule
-Selected GDELT event records & 30 \\
-GKG corpus size (usable rows) & 108{,}343 \\
-Direct-join event/article rows & 31 \\
-Lexical candidate pairs (events covered) & 230 (25 of 30) \\
-Exact-source pairs among lexical candidates & 1 (0.43\%) \\
-Events with exact source in top ten & 1 of 30 (3.33\%) \\
-Unique event/article pairs after combining & 260 \\
-Sector labels on lexical candidates (Energy / Industrials / Unknown) & 2 / 2 / 226 \\
-Sector labels on exact-link rows (Consumer Staples / Unknown) & 2 / 29 \\
+Selected GDELT event records           & 30 \\
+GKG corpus size (usable rows)          & 108{,}343 \\
+\addlinespace[2pt]
+Direct-join event/article rows         & 31 \\
+Lexical candidate pairs (events covered) & 230 (25\,/\,30) \\
+Exact-source pairs among lex.\ cands.  & 1\ \ (0.43\%) \\
+Events with exact source in top 10     & 1\,/\,30 (3.33\%) \\
+Unique pairs after combining           & 260 \\
+\addlinespace[2pt]
+Sector labels on lex.\ cands.\ (E\,/\,I\,/\,Unk.) & 2\,/\,2\,/\,226 \\
+Sector labels on exact-link (CS\,/\,Unk.) & 2\,/\,29 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Market context.} For broad-market context, the Nifty~50 raw cumulative returns were $+1.14$\%, $+1.78$\%, $-1.89$\%, $+0.95$\%, and $+2.19$\% over 1, 3, 7, 14, and 30 trading days. The market-model calculations for analyst-defined baskets are summarized in Table~\ref{tab:redsea-car} and Figure~\ref{fig:redsea-car}; raw returns are in Appendix~\ref{app:raw}. These are single-case descriptive calculations without significance tests or causal interpretation.
+\paragraph{Market context.} Nifty~50 raw cumulative returns were
+$+1.14$\%, $+1.78$\%, $-1.89$\%, $+0.95$\%, and $+2.19$\% over 1,
+3, 7, 14, and 30 trading days. Market-model results for analyst-defined
+baskets are in Table~\ref{tab:redsea-car} and Figure~\ref{fig:redsea-car};
+raw returns are in Appendix~\ref{app:raw}. All figures are descriptive
+with no significance tests.
 
 \begin{table}[t]
 \centering
-\caption{Case 1 descriptive CARs (\%), market model against the Nifty~50, 120-session estimation window.}
+\caption{Case~1 descriptive CARs (\%),
+  market model vs.\ Nifty~50, 120-session estimation window.
+  ``Ports/log.'' = ports and logistics basket.}
 \label{tab:redsea-car}
 \small
-\begin{tabular}{lccccc}
+\begin{tabular}{@{}lrrrrr@{}}
 \toprule
-\textbf{Candidate series} & \textbf{1d} & \textbf{3d} & \textbf{7d} & \textbf{14d} & \textbf{30d} \\
+\textbf{Series} & \textbf{1d} & \textbf{3d} & \textbf{7d} &
+  \textbf{14d} & \textbf{30d} \\
 \midrule
-Ports/logistics & $-1.77$ & $-2.74$ & $-0.11$ & $+6.70$ & $+5.58$ \\
-Energy          & $+0.58$ & $+3.30$ & $+3.90$ & $+13.86$ & $+17.78$ \\
-FMCG            & $-0.33$ & $-0.26$ & $-1.87$ & $-2.88$ & $-5.15$ \\
+Ports/log. & $-1.77$ & $-2.74$ & $-0.11$ & $+6.70$ & $+5.58$ \\
+Energy     & $+0.58$ & $+3.30$ & $+3.90$ & $+13.86$ & $+17.78$ \\
+FMCG       & $-0.33$ & $-0.26$ & $-1.87$ & $-2.88$  & $-5.15$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  ybar, width=0.9\textwidth, height=6.5cm,
+  ybar, width=\columnwidth, height=5.5cm,
   symbolic x coords={1d,3d,7d,14d,30d}, xtick=data,
-  ylabel={CAR (\%)}, ymajorgrids, legend style={at={(0.5,-0.18)},anchor=north,legend columns=3,font=\footnotesize},
-  bar width=7pt, enlarge x limits=0.12, tick label style={font=\footnotesize}
+  ylabel={CAR (\%)}, ymajorgrids,
+  legend style={at={(0.5,-0.22)},anchor=north,legend columns=3,font=\scriptsize},
+  bar width=5pt, enlarge x limits=0.15,
+  tick label style={font=\scriptsize},
+  ylabel style={font=\footnotesize}
 ]
 \addplot coordinates {(1d,-1.77) (3d,-2.74) (7d,-0.11) (14d,6.70) (30d,5.58)};
 \addplot coordinates {(1d,0.58) (3d,3.30) (7d,3.90) (14d,13.86) (30d,17.78)};
@@ -335,11 +349,13 @@ FMCG            & $-0.33$ & $-0.26$ & $-1.87$ & $-2.88$ & $-5.15$ \\
 \legend{Ports/logistics, Energy, FMCG}
 \end{axis}
 \end{tikzpicture}
-\caption{Case 1 descriptive CARs for analyst-defined baskets. Basket membership was chosen by the researcher; the figure does not show system-identified exposure.}
+\caption{Case~1 descriptive CARs for analyst-defined baskets.
+  Baskets were chosen by the researcher and are not system-identified exposures.}
 \label{fig:redsea-car}
 \end{figure}
 
 \subsection{Case 2: Semiconductor export controls}
+
 
 \paragraph{Linkage and retrieval.} The exact-source join linked seven coded event records to one same-day GKG row carrying the article URL. In a same-day corpus of 120{,}718 metadata rows, the exact article ranked 4{,}033rd under the baseline TF-IDF query (cosine score 0.0692). Enriching the query moved it to rank 55, still outside the top 50 (Table~\ref{tab:semi-rank}). A single-rater review of the baseline top 20 classified 12 items as unrelated and eight as adjacent context; none was directly relevant under the case-specific rubric, giving direct-relevance precision@20 of 0.0 for this diagnostic sample. Because the review relied largely on titles, URL slugs, and metadata, it should be read as a small diagnostic, not a general precision estimate.
 
@@ -379,14 +395,17 @@ Indian large-cap IT (indirect context) & Nifty 50 & $+0.31$ & $+2.79$ & $-1.60$ 
 \end{tabular}
 \end{table*}
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  ybar, width=0.9\textwidth, height=6.5cm,
+  ybar, width=\columnwidth, height=5.5cm,
   symbolic x coords={1d,3d,7d,14d,30d}, xtick=data,
-  ylabel={CAR (\%)}, ymajorgrids, legend style={at={(0.5,-0.18)},anchor=north,legend columns=3,font=\footnotesize},
-  bar width=7pt, enlarge x limits=0.12, tick label style={font=\footnotesize}
+  ylabel={CAR (\%)}, ymajorgrids,
+  legend style={at={(0.5,-0.22)},anchor=north,legend columns=3,font=\scriptsize},
+  bar width=5pt, enlarge x limits=0.15,
+  tick label style={font=\scriptsize},
+  ylabel style={font=\footnotesize}
 ]
 \addplot coordinates {(1d,1.36) (3d,-2.16) (7d,-5.08) (14d,-4.18) (30d,-13.94)};
 \addplot coordinates {(1d,0.52) (3d,-2.86) (7d,-5.38) (14d,-3.53) (30d,-9.27)};
@@ -415,7 +434,7 @@ Direct URL join & Links for all 30 Red Sea records; 7 records $\to$ 1 article (C
 Lexical retrieval & 1/230 exact pairs (Case 1); rank 4{,}033 $\to$ 55 (Case 2) & Weak; unvalidated \\
 Sector rules & 226/230 Unknown (Case 1) & Low coverage; no validated mapping \\
 Market windows & CARs computable for analyst baskets & Descriptive only; baskets not system-derived \\
-Geographic propagation map & Origin $\to$ affected countries $\to$ India per case & Visual reasoning chain; not causal evidence \\
+Geographic propagation map & Origin $\to$ affected countries $\to$ India per case & Visual reasoning chain; not causal evidence; figures rebuilt with correct proxy tickers \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -433,11 +452,11 @@ Table~\ref{tab:crosscase} reports the descriptive event-study output for all six
 \toprule
 \textbf{ID} & \textbf{Label} & \textbf{Str.} & \textbf{Anchor} & \textbf{Ticker} & \textbf{CAR (\%)} & \textbf{$p$} & \textbf{Verdict} \\
 \midrule
-CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{ADANIPORTS.NS}  & $+4.219$ & $0.4455$ & Null \\
+CS-01 & Red Sea / Houthi crisis           & B & 12 Jan 2024 & \texttt{ADANIPORTS.NS}\textsuperscript{a}  & $+4.219$ & $0.4455$ & Null \\
 CS-02 & US semiconductor export controls  & A & 29 Jan 2024 & \texttt{\^{}CNXIT}     & $-7.003$ & $0.1974$ & Null \\
-CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{RELIANCE.NS}   & $+4.496$ & $0.0614$ & Null \\
-CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{TATASTEEL.NS}  & $+0.104$ & $0.9681$ & Null \\
-CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{RELIANCE.NS}   & $+4.496$ & $0.0614$ & Null \\
+CS-03 & Iran oil sanctions tightening     & A & 16 Feb 2024 & \texttt{RELIANCE.NS}\textsuperscript{a}   & $+4.496$ & $0.0614$ & Null \\
+CS-04 & China rare-earth export curbs     & C & 01 Feb 2024 & \texttt{TATASTEEL.NS}\textsuperscript{a}  & $+0.104$ & $0.9681$ & Null \\
+CS-05 & Russia Black Sea energy disruption & B & 18 Jan 2024 & \texttt{RELIANCE.NS}\textsuperscript{a}   & $+4.496$ & $0.0614$ & Null \\
 CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHARMA} & $-7.046$ & $0.1344$ & Null \\
 \bottomrule
 \end{tabular}
@@ -445,63 +464,98 @@ CS-06 & India pharma API supply shock     & C & 08 Mar 2024 & \texttt{\^{}CNXPHA
 \smallskip
 \footnotesize CAR and $p$ computed by \texttt{experiments/case\_studies/run\_pipeline.py} (MacKinlay 1997,
 120-session estimation window).
-CS-01 uses \texttt{ADANIPORTS.NS} (ports proxy);
-CS-03 and CS-05 use \texttt{RELIANCE.NS} (energy proxy);
-CS-04 uses \texttt{TATASTEEL.NS} (metals proxy).
-Sector index tickers were unavailable in the archived data
-(\texttt{\^{}CNXINFRA}, \texttt{\^{}CNXENERGY}, \texttt{\^{}CNXMETAL}).
+\textsuperscript{a} Proxy ticker used because the sector-index history was unavailable in the archive
+(\texttt{\^{}CNXINFRA} for CS-01, \texttt{\^{}CNXENERGY} for CS-03/CS-05, \texttt{\^{}CNXMETAL} for CS-04).
+CS-03 and CS-05 share \texttt{RELIANCE.NS} (energy proxy); their 30-day $\CAR$ coincide
+while raw-return windows differ because the anchors differ.
 CS-02 and CS-06 use \texttt{\^{}CNXIT} and \texttt{\^{}CNXPHARMA} respectively,
 which are present throughout the sample.
 Full results in \texttt{results/datasets/cross\_case\_summary.csv}.
 \end{table*}
 
-\subsection{Geographic propagation maps}\label{sec:propmap}
+\subsection{Six-case evaluation matrix}\label{sec:evalmatrix}
 
-Figure~\ref{fig:propmap_cs01} shows the propagation map for CS-01 (Red Sea). Each map has three layers: (1)~a red star at the event's geographic origin; (2)~orange circles at the centroids of directly affected countries, sized by mean absolute Goldstein score of GDELT events near the anchor date; and (3)~a dashed arrow from the origin to India, coloured red if the event-study CAR is confirmed negative ($p<0.05$), green if confirmed positive, and grey if the result is null or unavailable. An inset panel shows the raw cumulative return at the 1/7/14/30-day horizons. Maps for all six cases are produced by \texttt{src/geosignal/visualization/propagation\_map.py} and available in the repository under \texttt{results/figures/<case\_id>/propagation\_map.png}.
+Table~\ref{tab:evalmatrix} is the evaluation matrix for the six registered cases. Each row records the ticker actually used in the saved replay, the 30-day market-model $\CAR$, the associated $t$ and $p$, the descriptive verdict ($p<0.05$ as a label only), and the raw cumulative-return windows. CS-01, CS-03, CS-04, and CS-05 use researcher-defined proxy tickers because the archived NSE sector-index histories (\texttt{\^{}CNXINFRA}, \texttt{\^{}CNXENERGY}, \texttt{\^{}CNXMETAL}) were unavailable. CS-03 and CS-05 share the energy proxy \texttt{RELIANCE.NS}; their 30-day $\CAR$ therefore coincide, while their raw-return windows differ because the anchors differ. No row is a causal attribution. The maps in Section~\ref{sec:propmap} (Figures~\ref{fig:propmap_cs01}--\ref{fig:propmap_cs06}) now reflect the same proxy tickers as this table.
 
-The maps visualise the pipeline's reasoning chain---which countries the pipeline treated as exposed and what market response it measured---and are not claims about actual geographic impact. The caption on each figure reads: ``Pipeline-detected propagation pathway (GDELT-sourced $\cdot$ indicative only).''
-
-\begin{figure}[t]
+\begin{table*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs01/propagation_map_sm.png}
-\caption{CS-01 propagation map: Red Sea / Houthi crisis (12 Jan 2024). Red star = event origin (Yemen). Orange circles = directly affected countries (size $\propto$ mean $|$Goldstein$|$). Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\caption{Six-case evaluation matrix. $\CAR$, $t$, and $p$ are MacKinlay (1997) market-model estimates (120-session window, event window $(-5,+30)$ vs.\ Nifty~50). Raw windows are cumulative log returns (\%). Verdict is a descriptive $p<0.05$ label only. $n$\,/\,a = window not stored for that case.}
+\label{tab:evalmatrix}
+\small
+\begin{tabular}{@{}lllcrrlrrrrr@{}}
+\toprule
+\textbf{ID} & \textbf{Ticker} & \textbf{Sector} & \textbf{Proxy?} & \textbf{CAR} & \textbf{$t$} & \textbf{$p$} & \textbf{V.} & \textbf{1d} & \textbf{7d} & \textbf{14d} & \textbf{30d} \\
+\midrule
+CS-01 & \texttt{ADANIPORTS.NS}\textsuperscript{a} & Logistics & Y & $+4.219$ & $0.846$ & $0.4455$ & Null & $-0.44$ & $-0.66$ & $+10.90$ & $+14.48$ \\
+CS-02 & \texttt{\^{}CNXIT} & Semiconductor & N & $-7.003$ & $-1.316$ & $0.1974$ & Null & $+3.50$ & $-0.32$ & $+2.46$ & $-9.77$ \\
+CS-03 & \texttt{RELIANCE.NS}\textsuperscript{a} & Energy & Y & $+4.496$ & $2.922$ & $0.0614$ & Null & $+0.92$ & $+1.72$ & $+1.26$ & $+0.75$ \\
+CS-04 & \texttt{TATASTEEL.NS}\textsuperscript{a} & Materials & Y & $+0.104$ & $0.043$ & $0.9681$ & Null & $+3.88$ & $+4.14$ & $+11.83$ & $+6.01$ \\
+CS-05 & \texttt{RELIANCE.NS}\textsuperscript{a} & Energy & Y & $+4.496$ & $2.922$ & $0.0614$ & Null & $-0.04$ & $+4.29$ & $+6.78$ & $+10.19$ \\
+CS-06 & \texttt{\^{}CNXPHARMA} & Health Care & N & $-7.047$ & $-1.535$ & $0.1344$ & Null & $-1.27$ & $-4.38$ & $-0.09$ & $-1.08$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\footnotesize Source files: \texttt{results/datasets/cs0N\_event\_study.csv} and \texttt{results/datasets/cross\_case\_summary.csv}.
+CS-02 also has a 3-day raw window of $+0.39$\%; CS-06 has a 3-day raw window of $-2.93$\%.
+\textsuperscript{a} Proxy ticker; corresponding sector-index history unavailable
+(\texttt{\^{}CNXINFRA} CS-01, \texttt{\^{}CNXENERGY} CS-03/CS-05, \texttt{\^{}CNXMETAL} CS-04).
+\end{table*}
+
+\clearpage
+\subsection{Geographic propagation maps and outcome storytelling}\label{sec:propmap}
+
+Figures~\ref{fig:propmap_cs01}--\ref{fig:propmap_cs06} are the six three-panel maps produced for this replay. Each figure uses the same layout:
+
+\begin{enumerate}
+  \item \textbf{Panel A (Event specification card):} Case identifier, stratum, anchor date, origin, real-world source, shocked sector, India transmission channel, CAMEO roots, a Goldstein-scale note, and the saved 30-day $\CAR$ with $p$-value.
+  \item \textbf{Panel B (Cropped map and timeline):} A transcontinental corridor ($32^\circ\mathrm{S}$ to $68^\circ\mathrm{N}$, $105^\circ\mathrm{W}$ to $145^\circ\mathrm{E}$) on a neutral basemap. Numbered steps mark (1)~event origin, (2)~directly affected hubs, and (3)~the Indian target series. The timeline strip is dated from that case's own anchor ($t=0,+1\mathrm{d},+7\mathrm{d},+14\mathrm{d},+30\mathrm{d}$). Null outcomes are drawn in slate gray.
+  \item \textbf{Panel C (Statistical outcome):} The $\CAR$ path over $[-5,+30]$ with a 95\% band, and a historical-replay null histogram with the observed $\CAR$, $t$, and $p$. Across all six cases the descriptive verdict is Null (fail to reject).
+\end{enumerate}
+
+Maps are written by \texttt{src/geosignal/visualization/propagation\_map.py} to \texttt{results/figures/<case\_id>/propagation\_map.png} and copied into the Overleaf package as \texttt{figures/cs0N\_propagation\_map.png}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/cs01_propagation_map.png}
+\caption{CS-01 propagation map: Red Sea / Houthi crisis (12 Jan 2024). Origin Yemen; Indian proxy \texttt{ADANIPORTS.NS} (ports/logistics; \texttt{\^{}CNXINFRA} unavailable in archive); 30-day $\CAR=+4.219$\%, $t=0.846$, $p=0.4455$ (Null).}
 \label{fig:propmap_cs01}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs02/propagation_map_sm.png}
-\caption{CS-02 propagation map: US semiconductor export controls (29 Jan 2024). Red star = event origin (USA). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\includegraphics[width=\textwidth]{figures/cs02_propagation_map.png}
+\caption{CS-02 propagation map: US semiconductor export controls (29 Jan 2024). Origin US BIS; Indian series \texttt{\^{}CNXIT}; 30-day $\CAR=-7.003$\%, $t=-1.316$, $p=0.1974$ (Null).}
 \label{fig:propmap_cs02}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[p]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs03/propagation_map_sm.png}
-\caption{CS-03 propagation map: Iran oil sanctions tightening (16 Feb 2024). Red star = event origin (Iran). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\includegraphics[width=\textwidth]{figures/cs03_propagation_map.png}
+\caption{CS-03 propagation map: Iran oil sanctions tightening (16 Feb 2024). Origin Tehran; Indian energy proxy \texttt{RELIANCE.NS} (\texttt{\^{}CNXENERGY} unavailable in archive); 30-day $\CAR=+4.496$\%, $t=2.922$, $p=0.0614$ (Null).}
 \label{fig:propmap_cs03}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[p]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs04/propagation_map_sm.png}
-\caption{CS-04 propagation map: China rare-earth export curbs (01 Feb 2024). Red star = event origin (China). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\includegraphics[width=\textwidth]{figures/cs04_propagation_map.png}
+\caption{CS-04 propagation map: China rare-earth export curbs (01 Feb 2024). Origin Beijing; Indian materials proxy \texttt{TATASTEEL.NS} (\texttt{\^{}CNXMETAL} unavailable in archive); 30-day $\CAR=+0.104$\%, $t=0.043$, $p=0.9681$ (Null).}
 \label{fig:propmap_cs04}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[p]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs05/propagation_map_sm.png}
-\caption{CS-05 propagation map: Russia Black Sea energy disruption (18 Jan 2024). Red star = event origin (Russia). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\includegraphics[width=\textwidth]{figures/cs05_propagation_map.png}
+\caption{CS-05 propagation map: Russia Black Sea energy disruption (18 Jan 2024). Origin Black Sea; Indian energy proxy \texttt{RELIANCE.NS} (\texttt{\^{}CNXENERGY} unavailable in archive); 30-day $\CAR=+4.496$\%, $t=2.922$, $p=0.0614$ (Null). Same proxy ticker as CS-03; different anchor and raw-return windows.}
 \label{fig:propmap_cs05}
-\end{figure}
+\end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[p]
 \centering
-\includegraphics[width=\columnwidth]{../results/figures/cs06/propagation_map_sm.png}
-\caption{CS-06 propagation map: India pharma API supply shock (08 Mar 2024). Red star = event origin (China). Orange circles = directly affected countries. Dashed arrow to India coloured by event-study verdict. Pipeline-detected pathway only; not a causal claim.}
+\includegraphics[width=\textwidth]{figures/cs06_propagation_map.png}
+\caption{CS-06 propagation map: India pharma API supply shock (08 Mar 2024). Origin Shanghai / NMPA; Indian series \texttt{\^{}CNXPHARMA}; 30-day $\CAR=-7.047$\%, $t=-1.535$, $p=0.1344$ (Null).}
 \label{fig:propmap_cs06}
-\end{figure}
+\end{figure*}
 
 % ------------------------------------------------------------
 \section{Discussion}\label{sec:discussion}
@@ -510,7 +564,7 @@ The replay clarifies what a prototype workflow can establish before it has a val
 
 \paragraph{Why retrieval is weak.} Several factors plausibly contribute, though this study does not isolate them: GKG v1 lacks article text, so queries built from actor and event fields share few discriminative terms with metadata; same-day corpora of over 100{,}000 rows contain many topically adjacent items; and event records can reference sources whose metadata emphasize different themes than the coded event. Testing these explanations requires ablations (Section~\ref{sec:future}).
 
-\paragraph{Downstream interpretation.} Rule-based sector labels are sparse, while the candidate baskets used for return calculations were selected by the researcher. The calculated CARs are sensitive to the chosen basket and window and may include unrelated market movements. They are not evidence of a system prediction, exposure validation, or causal effect. The six-case cross-section (Table~\ref{tab:crosscase}) and the geographic propagation maps (Section~\ref{sec:propmap}) extend the evidence base across strata, but the same interpretive constraints apply to every case: descriptive market calculations on researcher-defined baskets do not validate the event-to-sector link or establish that a measured return was caused by the event.
+\paragraph{Downstream interpretation.} Rule-based sector labels are sparse, while the candidate baskets used for return calculations were selected by the researcher. The calculated CARs are sensitive to the chosen basket and window and may include unrelated market movements. They are not evidence of a system prediction, exposure validation, or causal effect. The six-case cross-section (Table~\ref{tab:crosscase}), the evaluation matrix (Table~\ref{tab:evalmatrix}), and the geographic propagation maps (Section~\ref{sec:propmap}) extend the evidence base across strata, but the same interpretive constraints apply to every case: descriptive market calculations on researcher-defined baskets do not validate the event-to-sector link or establish that a measured return was caused by the event.
 
 \paragraph{Implications for a live system.} A live deployment would inherit the weaknesses documented here. Because direct source links are reliable but sparse, a live monitor should surface provenance and uncertainty explicitly and avoid presenting lexical candidates or sector labels as findings. The replay supports building evaluation infrastructure first, and treating retrieval and exposure mapping as research questions rather than solved components.
 
@@ -592,16 +646,15 @@ Semis & Nifty 50 (benchmark) & $+0.01$ & $-0.83$ & $-2.21$ & $+0.88$ & n/a \\
 
 The configured mapper uses keyword rules in the GICS taxonomy. Examples are oil/crude/LNG for Energy; shipping/freight/logistics/Suez for Industrials; rice/wheat/food for Consumer Staples; and semiconductor/chip/EUV/NAND for Information Technology. A candidate is labeled Unknown if no configured rule matches. These rules measure text-rule coverage only; they are not validated event-to-company exposures.
 
-\section{Items to complete before submission}
+\section{Map file names in the Overleaf package}\label{app:maps}
+
+The six maps appear in Section~\ref{sec:propmap} as Figures~\ref{fig:propmap_cs01}--\ref{fig:propmap_cs06}. In the Overleaf zip they are \texttt{figures/cs01\_propagation\_map.png} through \texttt{figures/cs06\_propagation\_map.png}.
+
+\section{Items remaining outside this results fill}
 \begin{itemize}
-  \item \textbf{[DONE]} Public repository created: \url{https://github.com/krish20041610/GeoSignal}.
-  \item \textbf{[DONE]} Conflicts of interest confirmed: none.
-  \item \textbf{[DONE]} Run \texttt{python experiments/case\_studies/run\_pipeline.py}: cross-case table populated and all six propagation-map figures generated. CS-02 (\texttt{\^{}CNXIT}) and CS-06 (\texttt{\^{}CNXPHARMA}) have numeric CARs; CS-01, CS-03--CS-05 now also have numeric CARs using proxy tickers (ADANIPORTS.NS, RELIANCE.NS, TATASTEEL.NS) since NSE sector-index history was unavailable (see table footnote).
-  \item Conduct the two-rater relevance labelling (Section~\ref{sec:future}, item~1) and report Cohen's kappa; update the Limitations section with the agreement score.
-  \item Verify remaining bibliography entries and choose the final citation style.
-  \item Add baseline/enriched query strings if the target venue requires implementation-level reproducibility.
-  \item Provide the target venue template and page limit; apply it.
-  \item Remove all red \texttt{TODO} markers and this appendix once the above are done.
+  \item Two-rater relevance labelling and Cohen's kappa (Section~\ref{sec:future}, item~1).
+  \item Final venue template, page limit, and citation style.
+  \item Baseline/enriched query strings if the venue requires implementation-level reproducibility.
 \end{itemize}
 
 % ------------------------------------------------------------

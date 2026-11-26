@@ -1,9 +1,9 @@
 """
 run_all.py
 ==========
-GeoSignal -- single-file master runner for the conference paper pipeline.
+GeoSignal -- single-file master runner for the end-to-end analysis pipeline.
 
-All planned components from README §14 are now implemented:
+Pipeline stages:
 
   Stage 1   Download GDELT events
   Stage 2   Download GKG news corpus
@@ -13,11 +13,11 @@ All planned components from README §14 are now implemented:
   Stage 6   NSE market data (yfinance)
   Stage 7   MacKinlay (1997) event study
   Stage 8   Integrated validation dataset
-  Stage 9   Toda-Yamamoto Granger causality (per sector)
+  Stage 9   Granger analysis (unfinished algorithm area)
   Stage 10  India I-O matrix build  (WIOD 2016 -> synthetic fallback)
-  Stage 11  Leontief I-O shock propagation
+  Stage 11  Leontief I-O propagation (unfinished empirical algorithm area)
   Stage 12  NetworkX geopolitical influence graph
-  Stage 13  Paper summary report
+  Stage 13  Run summary
 
 Usage
 -----
@@ -47,8 +47,8 @@ Outputs (all under results/)
   figures/leontief_heatmap.png
   figures/network_graph.png
   figures/network_graph_sectors.png
-  paper_summary.txt
-  paper_summary.json
+  run_summary.txt
+  run_summary.json
   logs/run_<timestamp>.log
 """
 
@@ -560,7 +560,7 @@ def stage_network_graph(io_csv_path: Path | None, force: bool) -> None:
         f"density={stats.get('density', '?')}"
     )
 
-    # Persist summary for paper report
+    # Persist pipeline summary
     summary_path = DATASETS_DIR / "network_summary.json"
     summary_path.write_text(json.dumps(stats, indent=2, default=str), encoding="utf-8")
 
@@ -648,11 +648,11 @@ def _plot_leontief_heatmap() -> None:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  Stage 13 -- Paper summary report
+#  Stage 13 -- Run summary
 # ══════════════════════════════════════════════════════════════════════════════
 
-def stage_paper_summary(args: argparse.Namespace, io_csv_path: Path | None, elapsed: float) -> None:
-    logger.info("Stage 13 · Paper summary report")
+def stage_run_summary(args: argparse.Namespace, io_csv_path: Path | None, elapsed: float) -> None:
+    logger.info("Stage 13 · Run summary")
 
     summary: dict = {
         "run_timestamp"  : datetime.utcnow().isoformat(),
@@ -662,7 +662,7 @@ def stage_paper_summary(args: argparse.Namespace, io_csv_path: Path | None, elap
     }
     lines: list[str] = [
         "=" * 72,
-        "  GeoSignal -- Paper Summary Report",
+        "  GeoSignal -- Pipeline Run Summary",
         f"  Generated : {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}",
         f"  Window    : {args.start} -> {args.end}",
         f"  Mode      : {'full 2022-2024' if args.full else 'dev sample'}",
@@ -800,7 +800,7 @@ def stage_paper_summary(args: argparse.Namespace, io_csv_path: Path | None, elap
 
     # ── Limitations ───────────────────────────────────────────────────────────
     lines += [
-        "-- Known Limitations (paper §Limitations) --------------------------------",
+        "-- Known Limitations ------------------------------------------------------",
         "  L-001  GKG proxy text != full article body.",
         "  L-002  GDELT dates = media detection, not event occurrence.",
         "  L-003  GDELT false-positive rate ~15-20%.",
@@ -817,13 +817,13 @@ def stage_paper_summary(args: argparse.Namespace, io_csv_path: Path | None, elap
         "=" * 72,
     ]
 
-    (RESULTS_DIR / "paper_summary.txt").write_text(
+    (RESULTS_DIR / "run_summary.txt").write_text(
         "\n".join(lines), encoding="utf-8"
     )
-    (RESULTS_DIR / "paper_summary.json").write_text(
+    (RESULTS_DIR / "run_summary.json").write_text(
         json.dumps(summary, indent=2, default=str), encoding="utf-8"
     )
-    logger.success(f"Stage 13 complete -> {RESULTS_DIR / 'paper_summary.txt'}")
+    logger.success(f"Stage 13 complete -> {RESULTS_DIR / 'run_summary.txt'}")
     print("\n" + "\n".join(lines))
 
 
@@ -943,9 +943,9 @@ def main() -> None:
     _plot_car_by_sector()
     _plot_leontief_heatmap()
 
-    # ── Paper summary ─────────────────────────────────────────────────────────
+    # ── Run summary ───────────────────────────────────────────────────────────
     elapsed = time.time() - t0
-    stage_paper_summary(args, io_csv, elapsed)
+    stage_run_summary(args, io_csv, elapsed)
 
     logger.success(f"All done in {elapsed:.1f}s")
     logger.info(f"  Results   : {RESULTS_DIR}")

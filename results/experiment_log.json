@@ -3,22 +3,178 @@
   "experiments": [
     {
       "experiment_id": "EXP-001",
-      "description": "Baseline GDELT 2024 Q1 (90-day dev sample) → NSE sectoral impact",
+      "description": "Baseline GDELT 2024 Q1 (90-day dev sample) \u2192 NSE sectoral impact",
       "created": "2026-09-16",
-      "status": "pipeline_incomplete",
+      "status": "superseded_stale_data_outputs",
       "config": {
         "start_date": "2024-01-01",
-        "end_date":   "2024-03-31",
+        "end_date": "2024-03-31",
         "granger_max_lags": 12,
         "estimation_window": 120,
-        "event_window": [-5, 30],
+        "event_window": [
+          -5,
+          30
+        ],
         "min_cosine_sim": 0.05,
         "bm25_top_n": 10
       },
-      "stages_completed": ["download_gdelt", "download_gkg", "preprocess", "market_data"],
-      "stages_pending":   ["nlp_alignment", "sector_mapping", "temporal_analysis", "impact_analysis"],
+      "stages_completed": [
+        "download_gdelt",
+        "download_gkg",
+        "preprocess",
+        "market_data"
+      ],
+      "stages_pending": [
+        "nlp_alignment",
+        "sector_mapping",
+        "temporal_analysis",
+        "impact_analysis"
+      ],
       "outputs": {},
-      "notes": "Dev sample. Granger tests underpowered at 90 days (L-009). Expand to 2022-2024 for production."
+      "notes": "Dev sample. Granger tests underpowered at 90 days (L-009). Expand to 2022-2024 for production. Original generated processed tables were found to have incorrect date coverage; do not use them as Q1 results."
+    },
+    {
+      "experiment_id": "EXP-002",
+      "description": "Red Sea historical feasibility run: event-to-news alignment and actor network",
+      "created": "2026-10-05",
+      "status": "offline_hybrid_retrieval_evaluated_sector_impact_pending",
+      "config": {
+        "event_date": "2024-01-12",
+        "event_root": "19",
+        "source_url_keyword_filter": "houth|red.?sea|yemen|shipping|ship|vessel|suez|cargo",
+        "deduplicated_by": "GDELT source URL",
+        "max_events": 30,
+        "news_corpus": "GDELT GKG v1 metadata for 2024-01-12 only",
+        "alignment": "sparse corpus-level BM25 retrieval followed by corpus-fitted TF-IDF cosine threshold"
+      },
+      "stages_completed": [
+        "historical_structured_events",
+        "historical_news_metadata",
+        "lexical_news_retrieval",
+        "market_response",
+        "actor_network",
+        "hybrid_event_news_output"
+      ],
+      "stages_partial": [
+        "event_news_source_linkage",
+        "sector_mapping"
+      ],
+      "stages_pending": [
+        "sector_event_study",
+        "granger_analysis",
+        "input_output_propagation",
+        "manual_semantic_relevance_validation"
+      ],
+      "results": {
+        "event_records": 30,
+        "news_metadata_records": 108343,
+        "event_news_pairs": 230,
+        "sector_counts": {
+          "Unknown": 226,
+          "Energy": 2,
+          "Industrials": 2
+        },
+        "alignment_metrics": {
+          "matched_events": 25,
+          "selected_events": 30,
+          "event_coverage_pct": 83.33,
+          "pairs_per_matched_event": 9.2,
+          "mean_cosine_similarity": 0.1818,
+          "median_cosine_similarity": 0.1833,
+          "event_url_available_pairs": 230,
+          "article_url_available_pairs": 230,
+          "interpretation": "retrieval coverage and similarity diagnostics only; not a manually validated precision score"
+        },
+        "nifty50_cumulative_returns_pct": {
+          "1_trading_days_pct": 1.1426,
+          "3_trading_days_pct": 1.779,
+          "7_trading_days_pct": -1.8866,
+          "14_trading_days_pct": 0.9544,
+          "30_trading_days_pct": 2.1936
+        },
+        "retrieval_evaluation": {
+          "evaluation": "single-case historical offline replay",
+          "case_date": "2024-01-12",
+          "reference_label": "same normalized source URL in GDELT event and GKG metadata; silver standard only",
+          "selected_event_count": 30,
+          "exact_url_link_rows": 31,
+          "events_with_exact_url_link": 30,
+          "exact_url_event_coverage_pct": 100.0,
+          "lexical_candidate_pairs": 230,
+          "events_with_lexical_candidates": 25,
+          "lexical_candidate_event_coverage_pct": 83.33,
+          "lexical_exact_source_url_pairs": 1,
+          "lexical_exact_source_url_pair_precision_pct": 0.43,
+          "events_with_exact_source_url_in_lexical_list": 1,
+          "exact_source_url_event_recall_at_10_pct": 3.33,
+          "hybrid_unique_event_article_pairs": 260,
+          "hybrid_events_with_exact_or_lexical_path": 30,
+          "hybrid_event_coverage_pct": 100.0,
+          "interpretation": "Direct URL linkage gives complete event coverage in this selected case. Lexical candidates broaden context but rarely recover the same-source URL; no human relevance labels or full article text are available."
+        }
+      },
+      "outputs": [
+        "redsea_events_20240112.parquet",
+        "redsea_events_20240112.csv",
+        "redsea_news_corpus_20240112.parquet",
+        "redsea_exact_source_links_20240112.parquet",
+        "redsea_exact_source_links_20240112.csv",
+        "redsea_event_news_sector_pairs_20240112.parquet",
+        "redsea_event_news_sector_pairs_20240112.csv",
+        "redsea_sector_mapping_counts_20240112.csv",
+        "redsea_case/network_edges.csv",
+        "redsea_case/network_nodes.csv",
+        "redsea_nifty50_prices_20230601_20240430.parquet",
+        "redsea_nifty50_returns_20230601_20240430.parquet",
+        "redsea_market_context_20240112.json",
+        "../figures/redsea_case/network_graph.png",
+        "redsea_retrieval_event_audit_20240112.csv",
+        "redsea_hybrid_event_news_pairs_20240112.csv",
+        "redsea_retrieval_evaluation_20240112.json"
+      ],
+      "notes": "Historical feasibility only. GKG is metadata, sector assignments are sparse/low-confidence; no Granger, prediction evaluation, or empirical I-O result. Descriptive market-model candidate-basket estimates are not system predictions or causal results."
+    },
+    {
+      "experiment_id": "EXP-003",
+      "description": "Second historical feasibility replay: semiconductor export-controls news on 2024-03-12",
+      "created": "2026-10-05",
+      "status": "event_source_linked_retrieval_weak_market_context_calculated",
+      "config": {
+        "event_date": "2024-03-12",
+        "source_url": "https://www.voanews.com/a/us-assessing-expansion-of-chip-export-controls-impacting-china-s-military/7523381.html",
+        "news_corpus": "same-day GDELT GKG v1 metadata",
+        "lexical_retrieval": "same-day TF-IDF cosine; baseline and enriched query comparison",
+        "market_estimation_window": 120,
+        "market_event_windows": [1, 3, 7, 14, 30]
+      },
+      "stages_completed": ["historical_event_record_selection", "exact_source_url_linkage", "metadata_lexical_ranking_diagnostic", "top20_single_rater_relevance_audit", "descriptive_market_model"],
+      "stages_partial": ["semantic_relevance_validation", "sector_security_mapping"],
+      "stages_pending": ["independent_multi_rater_relevance_review", "validated_exposure_taxonomy", "multi_event_performance_evaluation", "causal_or_predictive_evaluation", "empirical_input_output_propagation"],
+      "results": {
+        "event_records_sharing_source_url": 7,
+        "unique_exact_gkg_article_rows": 1,
+        "exact_url_join_rows": 7,
+        "same_day_gkg_metadata_records": 120718,
+        "exact_article_rank_baseline": 4033,
+        "exact_article_rank_enriched_query": 55,
+        "baseline_top20_relevance": {"unrelated": 12, "adjacent_context": 8, "directly_relevant": 0},
+        "market_model_global_semiconductor_basket_CAR_pct_log_approx": {"1_day": 1.3614, "7_day": -5.0769, "30_day": -13.9438},
+        "interpretation": "Source traceability and market-calculation feasibility demonstrated. Metadata retrieval remains weak; baskets are researcher-defined, market estimates are descriptive and not causal or predicted by GeoSignal."
+      },
+      "outputs": [
+        "chip_controls_events_20240312.csv",
+        "chip_controls_exact_source_links_20240312.csv",
+        "chip_controls_top50_metadata_candidates_20240312.csv",
+        "chip_controls_top50_enriched_candidates_20240312.csv",
+        "chip_controls_replay_summary_20240312.json",
+        "chip_controls_top20_relevance_audit_20240312.csv",
+        "chip_controls_exact_link_relevance_review_20240312.csv",
+        "chip_controls_relevance_audit_summary_20240312.json",
+        "chip_controls_candidate_prices_20230601_20240430.parquet",
+        "chip_controls_market_model_event_study_20240312.csv",
+        "chip_controls_market_event_study_20240312.json"
+      ],
+      "notes": "One case; audit is single-rater and mostly metadata/title based. No validated sector/security match or causal interpretation."
     }
   ]
 }

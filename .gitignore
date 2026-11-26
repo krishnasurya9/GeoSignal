@@ -40,6 +40,17 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Local document and submission materials
+/paper/
+
+# Local agent notes and one-off analysis helpers
+.agents/
+check_impacts.py
+do_git.py
+fix_impact_windows.py
+inspect_data.py
+test_run.py
+
 # Temporary / scratch files
 run_verify.py
 _check_imports.py

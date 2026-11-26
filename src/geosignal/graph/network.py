@@ -481,7 +481,7 @@ class GeoSignalGraph:
     # ── Summary stats ─────────────────────────────────────────────────────────
 
     def summary(self) -> dict:
-        """Return key graph statistics as a dict (useful for paper tables)."""
+        """Return key graph statistics as a dict for analysis summaries."""
         if not _HAS_NX or self.G.number_of_nodes() == 0:
             return {}
 

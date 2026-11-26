@@ -48,7 +48,7 @@
   
   This proxy text enables BM25/TF-IDF retrieval but is NOT equivalent to reading
   the article. This limitation is explicitly acknowledged in all results and
-  analysis. The paper must note this as a constraint on NLP quality.
+  analysis. Reports must note this as a constraint on NLP quality.
   
 - **Why selected:** Same infrastructure as GDELT events; co-referenced event IDs;
   no scraping required; covers the same temporal period; open access

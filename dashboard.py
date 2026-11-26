@@ -106,7 +106,7 @@ if page == "Overview":
         "Geopolitical Event → Economic Impact Analysis | India NSE Sectoral Markets"
     )
 
-    summary = _load_json(RESULTS_DIR / "paper_summary.json")
+    summary = _load_json(RESULTS_DIR / "run_summary.json")
 
     if summary:
         col1, col2, col3, col4 = st.columns(4)
@@ -149,10 +149,10 @@ if page == "Overview":
             "```\npython run_all.py --skip-download\n```"
         )
 
-    # Paper summary text
-    txt_path = RESULTS_DIR / "paper_summary.txt"
+    # Pipeline run summary
+    txt_path = RESULTS_DIR / "run_summary.txt"
     if txt_path.exists():
-        with st.expander("📄 Full paper summary text"):
+        with st.expander("Pipeline run summary"):
             st.text(txt_path.read_text(encoding="utf-8"))
 
     # File inventory
@@ -249,9 +249,8 @@ elif page == "Granger Causality":
     st.title("📊 Granger Causality (Toda-Yamamoto)")
     st.warning(
         "**L-007 / DEC-007 — Methodological constraint:**  "
-        "These results describe *Granger-predictive precedence* only — "
-        "**not causal mechanism**. All language in the paper must use "
-        "'geo_risk **Granger-predicts** sector_return', never 'causes'.",
+        "These results describe Granger-predictive precedence only, not "
+        "causality. Use 'geo_risk Granger-predicts sector_return', not 'causes'.",
         icon="⚠️",
     )
 

@@ -20,8 +20,8 @@ Strategy (in priority order)
 3. Fallback synthetic matrix — constructed from publicly available
    India sectoral GDP shares (MOSPI National Accounts 2022-23),
    giving realistic but still illustrative coefficients.
-   Clearly labelled "synthetic_from_gdp_shares" so the paper can
-   acknowledge the limitation honestly.
+   Clearly labelled "synthetic_from_gdp_shares" so downstream users can
+   identify the limitation.
 
 All three paths produce the same output format:
     config/india_io_<source>_<year>.csv
@@ -41,7 +41,7 @@ Usage
     from geosignal.propagation.leontief import LeontiefPropagator
     propagator = LeontiefPropagator.from_csv(path)
 
-Paper acknowledgement
+Source acknowledgement
 ---------------------
 If source == "wiod":
     "Input-output coefficients derived from the WIOD 2016 release
@@ -358,7 +358,7 @@ def _build_synthetic(out_dir: Path, force: bool) -> Path:
       (used for structural priors on off-diagonal entries)
 
     All values are clearly labelled "synthetic_from_gdp_shares" in the
-    output file so the paper can acknowledge the approximation.
+    output file so downstream users can identify the approximation.
     """
     out_path = out_dir / "india_io_synthetic_2023.csv"
     if out_path.exists() and not force:

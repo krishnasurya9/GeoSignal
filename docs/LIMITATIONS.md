@@ -1,7 +1,7 @@
 # GeoSignal — Known Limitations
 
-This document is maintained throughout the project. Every significant limitation
-must be recorded here before it is reported in any results table or paper section.
+This document records limitations that apply to system outputs and analysis
+summaries. Keep relevant caveats with any result shared outside the project.
 
 ---
 
@@ -101,7 +101,7 @@ Granger causality tests predictive precedence only. A significant Granger result
 means that past values of geopolitical risk are informative for forecasting sectoral
 returns — it does NOT establish a causal mechanism.
 
-**Mitigation:** All code outputs and paper sections must use language like:
+**Mitigation:** All code outputs and reports must use language like:
 "geo_risk Granger-predicts sector_return" — never "geo_risk causes sector_return."
 
 ---
@@ -145,27 +145,24 @@ logs an explicit warning and produces no result when observations fall
 below 4 × max_lag. A longer 2022–2024 daily panel would support a
 pre-specified Toda-Yamamoto analysis and is left for future work.
 
-**Case coverage (adequate for the paper's claim):**
+**Case coverage:**
 Six cases are registered across all four strata (A/B/C/D), drawing on
-the 2024 Q1 archive. The paper's claim is workflow feasibility, not
-population-level inference. Six varied cases with honest null reporting
-are sufficient for that claim. The Q1 archive is not expanded to avoid
-adding unvalidated material under time pressure.
+the 2024 Q1 archive. They support a bounded historical workflow replay, not
+population-level inference. The Q1 archive is not expanded in this version.
 
 **Mitigation (current):**
 - Event study estimation windows are satisfied by the yfinance return history.
 - All six cases are anchored within the 90-day GDELT window.
 - Granger results are suppressed and documented as insufficient (not omitted silently).
-- The cross-case summary table (cross_case_summary.csv / .tex) reports
+- The cross-case summary table (`cross_case_summary.csv`) reports
   all results including null and insufficient outcomes.
 
 **Resolution path (future work):**
 Expand the GDELT + GKG archive to 2022–2024 using batch_downloader.py
 (`python run_all.py --full --start 2022-01-01 --end 2024-12-31`).
-This will enable the Toda-Yamamoto Granger analysis with sufficient power
-and extend the case study pool. Leave one sentence in the paper:
-"A longer 2022–2024 daily panel would support a pre-specified temporal
-analysis (Toda-Yamamoto) and is left for future work."
+This would enable a better powered Toda-Yamamoto analysis and extend the case
+study pool. Record the expanded input window and pre-specified analysis with
+the run outputs.
 
 ---
 
@@ -184,10 +181,9 @@ left no trace in the 2024 Q1 archive are necessarily excluded.
 They do not generalise to the population of geopolitical events, to other
 markets, or to other time periods.
 
-**Mitigation:** The paper should state: "Results are reported for six
-pre-selected cases satisfying the inclusion protocol. They do not
-constitute a representative sample and should not be interpreted as
-population-level estimates."
+**Mitigation:** Reports should state that results cover six pre-selected
+cases satisfying the inclusion protocol. They are not representative and
+should not be interpreted as population-level estimates.
 
 ---
 
@@ -220,8 +216,6 @@ shares. While the synthetic matrix satisfies the Hawkins-Simon
 stability condition and has realistic structural priors, it is not an
 empirically derived transaction table.
 
-**Mitigation:** All Leontief outputs are labelled with the matrix source
-in the figure title and in leontief_shocks.csv. The paper should note:
-"Leontief propagation results are illustrative; the A matrix is
-estimated from sectoral GDP shares pending integration of the official
-MoSPI 2017-18 I-O table. Same for the case study Leontief figures."
+**Mitigation:** All Leontief outputs should identify the matrix source in
+the figure title and in `leontief_shocks.csv`. Clearly label results from
+synthetic matrices as illustrative.

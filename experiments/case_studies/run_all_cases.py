@@ -10,7 +10,6 @@ What this script does
 2. Draws the propagation map for every case via propagation_map.py.
 3. Assembles a cross-case summary table:
      results/datasets/cross_case_summary.csv      (machine-readable)
-     results/datasets/cross_case_summary.tex      (LaTeX table, paper-ready)
 4. Prints a formatted console summary.
 
 Usage
@@ -235,79 +234,6 @@ def build_cross_case_summary(results: list[dict]) -> pd.DataFrame:
     return df[present].reset_index(drop=True)
 
 
-def write_latex_table(df: pd.DataFrame, out_path: Path) -> None:
-    """
-    Write a LaTeX longtable of the cross-case event-study results.
-    Rows sorted by anchor_date.  Confirmed results bold.
-    """
-    rows: list[str] = []
-    rows.append(r"\begin{longtable}{llccrrrl}")
-    rows.append(r"\caption{GeoSignal Cross-Case Event Study Results} \\")
-    rows.append(r"\toprule")
-    rows.append(
-        r"\textbf{ID} & \textbf{Case} & \textbf{Str.} & \textbf{Anchor} & "
-        r"\textbf{CAR (\%)} & \textbf{t} & \textbf{p} & \textbf{Verdict} \\"
-    )
-    rows.append(r"\midrule")
-    rows.append(r"\endfirsthead")
-    rows.append(r"\toprule")
-    rows.append(
-        r"\textbf{ID} & \textbf{Case} & \textbf{Str.} & \textbf{Anchor} & "
-        r"\textbf{CAR (\%)} & \textbf{t} & \textbf{p} & \textbf{Verdict} \\"
-    )
-    rows.append(r"\midrule")
-    rows.append(r"\endhead")
-    rows.append(r"\midrule \multicolumn{8}{r}{\textit{Continued...}} \\")
-    rows.append(r"\endfoot")
-    rows.append(r"\bottomrule")
-    rows.append(r"\endlastfoot")
-
-    sorted_df = df.sort_values("anchor_date") if "anchor_date" in df.columns else df
-    for _, row in sorted_df.iterrows():
-        car = row.get("CAR_pct")
-        t   = row.get("t_stat")
-        p   = row.get("p_value")
-        v   = row.get("validation", "—")
-
-        car_str = f"{float(car):+.3f}" if car is not None and not _isnan(car) else "—"
-        t_str   = f"{float(t):+.3f}"  if t   is not None and not _isnan(t)   else "—"
-        p_str   = f"{float(p):.4f}"   if p   is not None and not _isnan(p)   else "—"
-
-        # Bold if confirmed significant
-        confirmed = (v == "Confirmed")
-        label_safe = str(row.get("label", "")).replace("&", r"\&").replace("%", r"\%")
-        case_id    = str(row.get("case_id", ""))
-        stratum    = str(row.get("stratum", ""))
-        anchor     = str(row.get("anchor_date", ""))
-
-        if confirmed:
-            line = (
-                rf"\textbf{{{case_id}}} & \textbf{{{label_safe}}} & "
-                rf"\textbf{{{stratum}}} & \textbf{{{anchor}}} & "
-                rf"\textbf{{{car_str}}} & \textbf{{{t_str}}} & "
-                rf"\textbf{{{p_str}}} & \textbf{{Confirmed}} \\"
-            )
-        else:
-            line = (
-                rf"{case_id} & {label_safe} & {stratum} & {anchor} & "
-                rf"{car_str} & {t_str} & {p_str} & {v} \\"
-            )
-        rows.append(line)
-
-    rows.append(r"\end{longtable}")
-
-    # Add note about methodology
-    rows += [
-        "",
-        r"% MacKinlay (1997) market model; estimation window = 120 trading days;",
-        r"% event window = (-5, +30); t-test on CAR; p < 0.05 = Confirmed.",
-        r"% Leontief I-O results are separate (see figures).",
-    ]
-
-    out_path.write_text("\n".join(rows), encoding="utf-8")
-    logger.success(f"LaTeX table -> {out_path}")
-
-
 def print_console_summary(df: pd.DataFrame) -> None:
     """Print a clean cross-case table to stdout."""
     print("\n" + "=" * 90)
@@ -496,12 +422,8 @@ Examples
     summary_df = build_cross_case_summary(results)
 
     csv_out = DATASETS_DIR / "cross_case_summary.csv"
-    tex_out = DATASETS_DIR / "cross_case_summary.tex"
-
     summary_df.to_csv(csv_out, index=False)
     logger.success(f"Cross-case CSV -> {csv_out}")
-
-    write_latex_table(summary_df, tex_out)
 
     plot_cross_case_car(summary_df)
 

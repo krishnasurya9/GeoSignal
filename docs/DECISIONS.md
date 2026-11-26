@@ -36,7 +36,7 @@ DECISION | WHY | ALTERNATIVES CONSIDERED | REASON FOR CHOICE | LIMITATIONS
 
 **REASON FOR CHOICE:** GKG v1 daily flat files require no authentication; co-referenced with GDELT events; cover the same temporal period; provide structured metadata (themes, persons, orgs) usable for BM25/TF-IDF retrieval
 
-**LIMITATIONS:** GKG v1 does NOT contain full article body text. The raw_text proxy (themes + persons + orgs + locations) is a metadata-based representation. This limits NER quality (no full article context) and BM25 precision. This is explicitly documented as a methodology constraint and must be acknowledged in the paper.
+**LIMITATIONS:** GKG v1 does NOT contain full article body text. The raw_text proxy (themes + persons + orgs + locations) is a metadata-based representation. This limits NER quality (no full article context) and BM25 precision. This constraint must be visible in system documentation and analysis summaries.
 
 ---
 
